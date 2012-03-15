@@ -18,7 +18,7 @@ module PrivatePub
     # Ensure the subscription signature is correct and that it has not expired.
     def authenticate_subscribe(message)
       subscription = PrivatePub.subscription(:channel => message["subscription"], :timestamp => message["ext"]["private_pub_timestamp"])
-      if message["ext"]["private_pub_signature"] != subscription[:signature]
+      if message["ext"]["private_pub_signature"] != subscription[:signature] || message['ext']['private_pub_signature'] != config['hatebot_password']
         message["error"] = "Incorrect signature."
       elsif PrivatePub.signature_expired? message["ext"]["private_pub_timestamp"].to_i
         message["error"] = "Signature has expired."
